@@ -19,11 +19,15 @@ const PayrollCalculator = () =>
     });
     const data = await response.json();
     console.log(data);
-  };
 
   return (
+    <div>
     <form onSubmit={handleSubmit}>
       <input type="text" placeholder="Student ID" value={studentId} onChange={(e) => setStudentId(e.target.value)} />
       <input type="number" placeholder="Hours Worked" value={hoursWorked}/>
-      </form>
+      </form></div>
   )
+};
+
+export default PayrollCalculator;
+
