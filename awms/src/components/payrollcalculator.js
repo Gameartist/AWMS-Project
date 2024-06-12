@@ -1,6 +1,8 @@
 // /frontend/src/components/PayrollCalculator.js
 import React, { useState } from 'react';
 
+
+
 const PayrollCalculator = () => 
     {
   const [studentId, setStudentId] = useState('');

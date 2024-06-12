@@ -1,32 +1,51 @@
 // /frontend/src/components/AttendanceLogger.js
 import React, { useState } from 'react';
-
-const AttendanceLogger = () => {
+import axios from 'axios';
+const AttendanceLogger = () => 
+{
   const [studentId, setStudentId] = useState('');
-  const [coordinates, setCoordinates] = useState([0, 0]);
+  const [coordinates, setCoordinates] = useState([]);
   const [signInTime, setSignInTime] = useState(new Date());
   const [signOutTime, setSignOutTime] = useState(new Date());
 
+  const getLocation = () =>
+  {
+    if (navigator.geolocation) {
+      navigator.geolocation.watchPosition(position => {
+        setCoordinates([position.coords.latitude, position.coords.longitude, position.coords.accuracy]);
+      }, error => {
+        console.error("Error getting location: ", error);
+      });
+    } 
+    else 
+    {
+      alert("Geolocation is not supported by this browser.");
+    }
+  };
+  
+
+
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch('http://localhost:3001/attendance/log', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ studentId, signInTime, signOutTime, coordinates }),
-    });
-    const data = await response.json();
+    const response = await axios.post('http://localhost:3001/attendance/log', { studentId, signInTime, signOutTime, coordinates })
+    const data = response.data;
     console.log(data);
   };
 
   return (
+    <div>
     <form onSubmit={handleSubmit}>
+      <button on onClick={getLocation}>Get current location</button>
       <input type="text" placeholder="Student ID" value={studentId} onChange={(e) => setStudentId(e.target.value)} />
       <input type="datetime-local" value={signInTime.toISOString().slice(0, 16)} onChange={(e) => setSignInTime(new Date(e.target.value))} />
       <input type="datetime-local" value={signOutTime.toISOString().slice(0, 16)} onChange={(e) => setSignOutTime(new Date(e.target.value))} />
       <button type="submit">Log Attendance</button>
     </form>
+    {coordinates[0] !== 0 && coordinates[1] !== 0 && (
+        <p>Current Location: Latitude {coordinates[0]}, Longitude {coordinates[1]}, Accuracy {coordinates[2]}</p>
+      )}
+    </div>
   );
 };
 

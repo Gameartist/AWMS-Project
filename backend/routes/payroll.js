@@ -1,7 +1,7 @@
 // /routes/payroll.js
 const express = require('express');
 const router = express.Router();
-const Payroll = require('c:/Users/Daniel/Documents/Project Stuff/AWMS Project/backend/models/payroll.js');
+const Payroll = require('c:/Users/Daniel/Documents/Project Stuff/AWMS Project/backend/models/Payroll.js');
 
 // Calculate payroll
 router.post('/calculate', async (req, res) => {

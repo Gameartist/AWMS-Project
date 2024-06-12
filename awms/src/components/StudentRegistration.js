@@ -1,38 +1,58 @@
 // /frontend/src/components/StudentRegistration.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios'
+import { Outlet } from 'react-router-dom';
 
 const StudentRegistration = () => {
   const [name, setName] = useState('');
   const [studentId, setStudentId] = useState('');
-  const [workOptions, setWorkOptions] = useState(['', '', '']);
-  const [imei, setImei] = useState('');
+  
+
+  const [workPlaces, setWorkPlaces] = useState([])
+  const [selectedPlaces, setSelectedPlaces] = useState([])
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch('http://localhost:3001/students/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name, studentId, workOptions}),
-    });
-    const data = await response.json();
+    const response = await axios.post('http://localhost:3001/students/assign', { name: name, studentId: studentId, workOptions: selectedPlaces })
+    const data = response.data;
+    if(data.message){
+      alert(`Assigned Workplace: ${data.place}`)
+    }
     console.log(data);
   };
 
-  const handleWorkOptionChange = (index, value) => {
-    const newWorkOptions = [...workOptions];
-    newWorkOptions[index] = value;
-    setWorkOptions(newWorkOptions);
-  };
+  useEffect(() => {
+    axios.get('http://localhost:3001/students/getallworkplaces')
+    .then((res) => {
+      setWorkPlaces(res.data.data)
+    })
+  }, [])
 
   return (
     <form onSubmit={handleSubmit}>
       <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
       <input type="text" placeholder="Student ID" value={studentId} onChange={(e) => setStudentId(e.target.value)} />
-      <input type="text" placeholder="Work Option 1" value={workOptions[0]} onChange={(e) => handleWorkOptionChange(0, e.target.value)} />
-      <input type="text" placeholder="Work Option 2" value={workOptions[1]} onChange={(e) => handleWorkOptionChange(1, e.target.value)} />
-      <input type="text" placeholder="Work Option 3" value={workOptions[2]} onChange={(e) => handleWorkOptionChange(2, e.target.value)} />
+     
+      <select onChange={(e) => {if(e.target.value !== 'none'){setSelectedPlaces([...selectedPlaces, e.target.value])}}}>
+        <option value={'none'}></option>
+        {workPlaces.map((place) => {
+          if(place.capacity !== 0 && !selectedPlaces.includes(place.name)){
+            return(
+              <option value={place.name}>{place.name}</option>
+            )
+          }
+        })}
+      </select>
+      <div>
+        {selectedPlaces.map((item) => {
+          return(
+            <div>{item}</div>
+          )
+        })}
+      </div>
+  
+      {/* Add inputs for work options */}
       <button type="submit">Register</button>
     </form>
   );

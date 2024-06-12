@@ -1,7 +1,7 @@
 // /routes/attendance.js
 const express = require('express');
 const router = express.Router();
-const Attendance = require('c:/Users/Daniel/Documents/Project Stuff/AWMS Project/backend/models/attendance.js');
+const Attendance = require("../models/Attendance.js");
 
 // Log attendance
 router.post('/log', async (req, res) => {

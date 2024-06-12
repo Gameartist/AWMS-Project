@@ -1,11 +1,13 @@
+// /models/Student.js
 const mongoose = require('mongoose');
 
 const studentSchema = new mongoose.Schema({
   name: String,
   studentId: String,
-  workOptions: [String],
+  workOptions: Array,
   assignedWorkplace: String,
-  coordinates: [Number],
-});
+  coordinates: Array,
+}, { timestamps: true });
 
-module.exports = mongoose.model('Student', studentSchema);
+const Student = mongoose.model('Student', studentSchema);
+module.exports = {Student}

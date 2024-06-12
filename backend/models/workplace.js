@@ -1,8 +1,9 @@
+// /models/Workplace.js
 const mongoose = require('mongoose');
 
 const workplaceSchema = new mongoose.Schema({
   name: String,
-  coordinates: [Number],
+  coordinates: Array,
   capacity: Number,
 });
 

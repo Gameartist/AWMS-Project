@@ -1,6 +1,7 @@
 // /frontend/src/components/CoordinatesManager.js
 import React, { useState } from 'react';
 
+
 const CoordinatesManager = () => {
   const [name, setName] = useState('');
   const [latitude, setLatitude] = useState('');
