@@ -2,11 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors')
 
-const initRoute = require('./routes/initRoute.js')
+// const initRoute = require('./routes/initRoute.js')
 const studentRoutes = require('./routes/students');
 const attendanceRoutes = require('./routes/attendance.js');
 const payrollRoutes = require('./routes/payroll.js');
 const coordinatesRoutes = require('./routes/coordinates.js');
+const adminRoute = require('./routes/admin.js')
 
 
 const app = express();
@@ -25,7 +26,7 @@ app.use(cors())
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 
-app.use('/init', initRoute)
+app.use('/admin', adminRoute)
 app.use('/students', studentRoutes);
 app.use('/attendance', attendanceRoutes);
 app.use('/payroll', payrollRoutes);

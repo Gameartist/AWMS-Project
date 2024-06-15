@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import StudentRegistration from "./StudentRegistration";
-import AttendanceLogger from "./AttendanceLogger";
 const Home = () => {
    return(
     <div>

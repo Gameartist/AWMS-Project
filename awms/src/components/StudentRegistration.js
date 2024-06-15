@@ -1,7 +1,6 @@
 // /frontend/src/components/StudentRegistration.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios'
-import { Outlet } from 'react-router-dom';
 
 const StudentRegistration = () => {
   const [name, setName] = useState('');

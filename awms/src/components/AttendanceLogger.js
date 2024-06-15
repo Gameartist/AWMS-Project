@@ -4,7 +4,7 @@ import axios from 'axios';
 const AttendanceLogger = () => 
 {
   const [studentId, setStudentId] = useState('');
-  const [coordinates, setCoordinates] = useState([]);
+  const [coordinates, setCoordinates] = useState([0, 0]);
   const [signInTime, setSignInTime] = useState(new Date());
   const [signOutTime, setSignOutTime] = useState(new Date());
 
@@ -12,7 +12,7 @@ const AttendanceLogger = () =>
   {
     if (navigator.geolocation) {
       navigator.geolocation.watchPosition(position => {
-        setCoordinates([position.coords.latitude, position.coords.longitude, position.coords.accuracy]);
+        setCoordinates([position.coords.latitude, position.coords.longitude]);
       }, error => {
         console.error("Error getting location: ", error);
       });
@@ -43,7 +43,7 @@ const AttendanceLogger = () =>
       <button type="submit">Log Attendance</button>
     </form>
     {coordinates[0] !== 0 && coordinates[1] !== 0 && (
-        <p>Current Location: Latitude {coordinates[0]}, Longitude {coordinates[1]}, Accuracy {coordinates[2]}</p>
+        <p>Current Location: Latitude {coordinates[0]}, Longitude {coordinates[1]}</p>
       )}
     </div>
   );

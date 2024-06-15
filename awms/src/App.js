@@ -1,6 +1,6 @@
 // /frontend/src/App.js
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Adminreg from './components/adminreg';
 import AttendanceLogger from './components/AttendanceLogger';
 
@@ -15,7 +15,7 @@ function App() {
           <Route path='/admin' element={<Adminreg/>}/>
           <Route path= '/RegisterAttendance' element = {<AttendanceLogger/>}/>
         </Routes>
-      </Router>
+      </Router>  
     </div>
     
   )
