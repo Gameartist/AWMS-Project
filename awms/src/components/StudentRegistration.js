@@ -16,7 +16,7 @@ const StudentRegistration = () => {
     const response = await axios.post('http://localhost:3001/students/assign', { name: name, studentId: studentId, workOptions: selectedPlaces })
     const data = response.data;
     if(data.message){
-      alert(`Assigned Workplace: ${data.place}`)
+      alert(`Assigned Workplace: ${data.place}`);
     }
     console.log(data);
   };
@@ -25,6 +25,7 @@ const StudentRegistration = () => {
     axios.get('http://localhost:3001/students/getallworkplaces')
     .then((res) => {
       setWorkPlaces(res.data.data)
+      console.log(res.data.data)
     })
   }, [])
 
@@ -36,10 +37,12 @@ const StudentRegistration = () => {
       <select onChange={(e) => {if(e.target.value !== 'none'){setSelectedPlaces([...selectedPlaces, e.target.value])}}}>
         <option value={'none'}></option>
         {workPlaces.map((place) => {
-          if(place.capacity !== 0 && !selectedPlaces.includes(place.name)){
-            return(
-              <option value={place.name}>{place.name}</option>
-            )
+          if(place !== null){
+            if(place.capacity !== 0 && !selectedPlaces.includes(place.name)){
+              return(
+                <option value={place.name}>{place.name}</option>
+              )
+            }
           }
         })}
       </select>
@@ -53,6 +56,7 @@ const StudentRegistration = () => {
   
       {/* Add inputs for work options */}
       <button type="submit">Register</button>
+      
     </form>
   );
 };

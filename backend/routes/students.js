@@ -2,6 +2,8 @@
 const express = require('express');
 const {Student} = require('../models/Student');
 const Workplace = require('../models/Workplace');
+const Attendance = require('../models/Attendance');
+const axios = require('axios').default;
 const router = express.Router();
 
 
@@ -16,7 +18,8 @@ router.post('/register', async (req, res) => {
     assignedWorkplace: "",
     coordinates: [],
     workOptions: workOptions,
-    studentId: studentId
+    studentId: studentId,
+  
   });
 
   await student.save();
@@ -88,7 +91,8 @@ router.post('/assign', async (req, res) => {
           studentId: studentId,
           workOptions: workOptions,
           assignedWorkplace: assignedWorkplace,
-          coordinates: workplace.coordinates
+          coordinates: workplace.coordinates,
+          fenceId: workplace.fenceId
         })
 
         await new_student.save()
@@ -100,11 +104,11 @@ router.post('/assign', async (req, res) => {
       res.status(400).json({ error: 'No available workplaces' });
     }
   } catch (error) {
+    console.log(error)
     res.status(500).json({ error: error.message });
   }
 });
 
-module.exports = router;
 
 
 router.post('/allocate', async (req, res) => {
@@ -121,5 +125,91 @@ router.get('/getallworkplaces', async (req, res) => {
   })
   res.json({status: 'ok', data: valid_places})
 })
+
+module.exports = router;
+
+
+router.post('/check-attendance', async (req, res) => {
+  const { studentId } = req.body;
+
+  try {
+    // Check if student exists
+    const student = await Student.findOne({ studentId });
+    if (!student) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    const today = new Date().setHours(0, 0, 0, 0);
+    const attendance = await Attendance.findOne({ studentId });
+
+    if (attendance) {
+      const lastLoggedDate = new Date(attendance.lastLoggedDate).setHours(0, 0, 0, 0);
+      if (lastLoggedDate === today) {
+        return res.json({ attendanceLogged: true });
+      }
+    }
+    
+    res.json({ attendanceLogged: false });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Check if the student is within their registered workplace's geofenced area
+router.post('/check-geofence', async (req, res) => {
+  const { studentId, latitude, longitude } = req.body;
+  console.log(req.body)
+  const apiKey = 'Your_API_Key';
+  const adminKey = 'Your_Admin_Key';
+  const projectId = 'Your_Project_Id';
+
+  try {
+    const student = await Student.findOne({ studentId });
+    if (!student) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    const workplace = await Workplace.findOne({ name: student.assignedWorkplace });
+    if (!workplace) {
+      return res.status(404).json({ error: 'Workplace not found' });
+    }
+
+    axios.get(`https://api.tomtom.com/geofencing/1/report?point=${latitude},${longitude}&object=006b3560-7fbf-476e-96a0-8aaaa0d76d7c&range=${workplace.radius}&key=5cHkoIFrAycFcOVEXIwhKfLHCQUrsQdA&adminKey=Dwj1PytrHlULx2IraqeyPMyAjulkOwshthL7Ka2RGBUsefgA`)
+    .then((response) => {
+      console.log("HERE ssdssd:", response.data)
+      console.log("HERE", response.data)
+
+      const insideGeofence = !response.data.inside.features.length === 0;
+
+      return res.json({ insideGeofence });
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Update total attendance time
+router.post('/update-attendance', async (req, res) => {
+  const { studentId, totalTime } = req.body;
+
+  try {
+    const student = await Student.findOneAndUpdate(
+      { studentId },
+      { totalAttendanceTime: totalTime },
+      { new: true }
+    );
+
+    if (!student) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    res.json({ message: 'Attendance updated', totalTime: student.totalAttendanceTime });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 module.exports = router;

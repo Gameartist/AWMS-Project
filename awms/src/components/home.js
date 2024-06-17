@@ -9,6 +9,7 @@ const Home = () => {
    
       <Link to ="/admin">Link to admin page</Link>
       <Link to = "/RegisterAttendance">Track your attendance</Link>
+      <Link to = "/PayrollGenerator">Generate Payroll report</Link>
     </div>
    )
 }

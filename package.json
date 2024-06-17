@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "@googlemaps/google-maps-services-js": "^3.4.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.4"
   }
 }
