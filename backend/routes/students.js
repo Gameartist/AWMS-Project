@@ -9,7 +9,7 @@ const router = express.Router();
 
 // Register student
 router.post('/register', async (req, res) => {
-  const { name, studentId, workOptions} = req.body;
+  const { name, studentId, workOptions, password} = req.body;
 
   console.log(req.body)
 
@@ -19,6 +19,7 @@ router.post('/register', async (req, res) => {
     coordinates: [],
     workOptions: workOptions,
     studentId: studentId,
+    password: password
   
   });
 
@@ -32,7 +33,7 @@ router.post('/register', async (req, res) => {
 // Check and assign workplaces
 router.post('/assign', async (req, res) => {
   try {
-    const { name, studentId, workOptions } = req.body;
+    const { name, password, studentId, workOptions } = req.body;
   
     // Validate input
     // if (!studentId || !Array.isArray(workOptions) || workOptions.length !== 3) {
@@ -89,6 +90,7 @@ router.post('/assign', async (req, res) => {
         const new_student = await Student.create({
           name: name,
           studentId: studentId,
+          password: password,
           workOptions: workOptions,
           assignedWorkplace: assignedWorkplace,
           coordinates: workplace.coordinates,
@@ -211,5 +213,42 @@ router.post('/update-attendance', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+
+// Login route
+router.post('/login', async (req, res) => {
+  const { studentId, password } = req.body; // Destructure studentId and password from request body
+
+  try {
+    // Find student by studentId
+    const student = await Student.findOne({ studentId });
+    if (!student) {
+      // Student not found
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    // Compare provided password with stored hashed password
+    const isMatch = await student.matchPassword(password);
+    if (!isMatch) {
+      // Password does not match
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    // Send success response with student details
+    res.json({
+      message: 'Login successful',
+      student: {
+        name: student.name,
+        studentId: student.studentId,
+        password: student.password,
+        assignedWorkplace: student.assignedWorkplace
+      }
+    });
+  } catch (error) {
+    // Handle any server errors
+    res.status(500).json({ error: error.message });
+  }
+});
+
 
 module.exports = router;

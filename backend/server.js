@@ -7,7 +7,8 @@ const studentRoutes = require('./routes/students');
 const attendanceRoutes = require('./routes/attendance.js');
 const payrollRoutes = require('./routes/payroll.js');
 const coordinatesRoutes = require('./routes/coordinates.js');
-const adminRoute = require('./routes/admin.js')
+const adminRoute = require('./routes/admin.js');
+const authRoute = require('./routes/auth.js');
 
 
 const app = express();
@@ -31,6 +32,7 @@ app.use('/students', studentRoutes);
 app.use('/attendance', attendanceRoutes);
 app.use('/payroll', payrollRoutes);
 app.use('/coordinates', coordinatesRoutes);
+app.use('/auth', authRoute);
 
 
 app.get('/', (req, res) => {

@@ -1,28 +1,35 @@
-// /frontend/src/App.js
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
-import Adminreg from './components/adminreg';
-import AttendanceLogger from './components/AttendanceLogger';
-
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import LandingPage from './components/LandingPage';
+import StudentRegistration from './components/StudentRegistration';
+import Login from './components/Login';
 import Home from './components/home';
+import AttendanceLogger from './components/AttendanceLogger';
 import PayrollCalculator from './components/PayrollCalculator';
+import Adminreg from './components/adminreg';
+// import AttendanceSummary from './components/AttendanceSummary';
 
-function App() {
+
+const App = () => {
   return (
-    <div>
-      <Router>
+    <div className="">
+      <Router>      
         <Routes>
-          <Route path='/' element={<Home/>}/>
-          <Route path='/admin' element={<Adminreg/>}/>
-          <Route path= '/RegisterAttendance' element = {<AttendanceLogger/>}/>
-          <Route path= '/PayrollGenerator' element = {<PayrollCalculator/>}/>
+          <Route path="/" element={<LandingPage/>} />
+          <Route path="/register" element={<StudentRegistration/>} />
+          <Route path="/login" element={<Login/>} />
+          <Route path="/home" element={<Home/>} />
+          <Route path="/register-attendance" element={<AttendanceLogger/>} />
+          <Route path="/view-attendance" element={<AttendanceLogger/>} />
+          <Route path="/payroll-report" element={<PayrollCalculator/>} />
+          <Route path="/admin" element={<Adminreg/>} />
+          {/* <Route path="/attendance-summary" element = {<AttendanceSummary/>}/> */}
+          
         </Routes>
-      </Router>  
+      </Router>
     </div>
     
-  )
+  );
 };
-
-
 
 export default App;
