@@ -99,7 +99,7 @@ const AttendanceLogger = () => {
 
           if (!insideGeofence) {
             setStatus('Outside geofence area');
-            stopTracking();
+            stopTracking();       
             alert('You just left the geofenced area designated for your workplace.');
           } else {
             setStatus('Inside geofence area');

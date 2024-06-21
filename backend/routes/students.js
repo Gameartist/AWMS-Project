@@ -175,13 +175,21 @@ router.post('/check-geofence', async (req, res) => {
     if (!workplace) {
       return res.status(404).json({ error: 'Workplace not found' });
     }
+    
+    const resp = await axios.post(`https://api.tomtom.com/geofencing/1/objects/object?key=5cHkoIFrAycFcOVEXIwhKfLHCQUrsQdA&adminKey=Dwj1PytrHlULx2IraqeyPMyAjulkOwshthL7Ka2RGBUsefgA`,{
+      name: studentId,
 
-    axios.get(`https://api.tomtom.com/geofencing/1/report?point=${latitude},${longitude}&object=006b3560-7fbf-476e-96a0-8aaaa0d76d7c&range=${workplace.radius}&key=5cHkoIFrAycFcOVEXIwhKfLHCQUrsQdA&adminKey=Dwj1PytrHlULx2IraqeyPMyAjulkOwshthL7Ka2RGBUsefgA`)
+    });
+    const { id: objectId } = resp.data; // Use `id` as `objectId`
+    console.log("HEREEEE with object ID: ", objectId)
+
+    //axios.get(`https://api.tomtom.com/geofencing/1/report/point=${longitude},${latitude}&object=${fenceId}&range=${workplace.radius}&key=5cHkoIFrAycFcOVEXIwhKfLHCQUrsQdA&adminKey=Dwj1PytrHlULx2IraqeyPMyAjulkOwshthL7Ka2RGBUsefgA`)
+    axios.get(`https://api.tomtom.com/geofencing/1/report/24e9443e-3eaa-4a0a-a0a9-45fa5c6b598f?key=5cHkoIFrAycFcOVEXIwhKfLHCQUrsQdA&point=${longitude},${latitude}&object=${objectId}&range=${workplace.radius}`)
     .then((response) => {
       console.log("HERE ssdssd:", response.data)
       console.log("HERE", response.data)
 
-      const insideGeofence = !response.data.inside.features.length === 0;
+      const insideGeofence = !response.data.inside.features.length === 0
 
       return res.json({ insideGeofence });
     })
