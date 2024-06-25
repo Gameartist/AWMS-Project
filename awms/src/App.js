@@ -7,6 +7,7 @@ import Home from './components/home';
 import AttendanceLogger from './components/AttendanceLogger';
 import PayrollCalculator from './components/PayrollCalculator';
 import Adminreg from './components/adminreg';
+import GeofenceDeleter from './components/GeofenceDeleter';
 // import AttendanceSummary from './components/AttendanceSummary';
 
 
@@ -23,6 +24,7 @@ const App = () => {
           <Route path="/view-attendance" element={<AttendanceLogger/>} />
           <Route path="/payroll-report" element={<PayrollCalculator/>} />
           <Route path="/admin" element={<Adminreg/>} />
+          <Route path="/delete-geofence" element ={<GeofenceDeleter/>}/>
           {/* <Route path="/attendance-summary" element = {<AttendanceSummary/>}/> */}
           
         </Routes>

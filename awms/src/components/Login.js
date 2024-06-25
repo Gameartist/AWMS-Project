@@ -12,6 +12,9 @@ const Login = () => {
       const data = response.data;
       console.log(data)
       if (data.message === 'success') {
+        sessionStorage.setItem('studentname', data.student.name)
+        sessionStorage.setItem('studentid', studentId)
+        sessionStorage.setItem('workplace', data.student.assignedWorkplace)
         window.location.href = '/home';
       } 
      

@@ -3,7 +3,7 @@ import axios from 'axios';
 import './styles.css';
 
 const AttendanceLogger = () => {
-  const [studentId, setStudentId] = useState('');
+  const [studentId, setStudentId] = useState(sessionStorage.getItem('studentid'));
   const [isTracking, setIsTracking] = useState(false);
   const [startTime, setStartTime] = useState(null);
   const [totalTime, setTotalTime] = useState(0);
@@ -47,17 +47,17 @@ const AttendanceLogger = () => {
   };
 
   const stopTracking = async () => {
+    setIsTracking(false);
+    const endTime = new Date();
+    const timeSpent = (endTime - startTime) / 1000; // Time in seconds
+    setTotalTime(totalTime + timeSpent);
+    
     if (watchId) {
       navigator.geolocation.clearWatch(watchId);
     }
     if (!window.confirm('You are about to stop tracking your attendance for today. Are you sure?')) {
       return;
     }
-
-    setIsTracking(false);
-    const endTime = new Date();
-    const timeSpent = (endTime - startTime) / 1000; // Time in seconds
-    setTotalTime(totalTime + timeSpent);
 
     try {
       await axios.post('http://localhost:3001/attendance/log', {
@@ -95,9 +95,9 @@ const AttendanceLogger = () => {
           longitude
         })
         .then((response) => {
-          const { insideGeofence } = response.data;
+          const { insideGeofence, insideGeofenceM } = response.data;
 
-          if (!insideGeofence) {
+          if (!insideGeofence && !insideGeofenceM) {
             setStatus('Outside geofence area');
             stopTracking();       
             alert('You just left the geofenced area designated for your workplace.');
@@ -143,6 +143,7 @@ const AttendanceLogger = () => {
         type="text"
         placeholder="Student ID"
         value={studentId}
+        readOnly
         onChange={(e) => setStudentId(e.target.value)}
         disabled={isTracking || attendanceLogged}
         className="w-full max-w-xs p-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"

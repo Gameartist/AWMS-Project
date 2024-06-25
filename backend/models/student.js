@@ -8,7 +8,8 @@ const studentSchema = new mongoose.Schema({
   assignedWorkplace: { type: String, required: true },
   coordinates: Array,
   password: {type: String, required: true},
-  fenceId: { type: String, required: true }, // Geofence ID from TomTom API
+  fenceId: { type: String, required: true}, // Geofence ID from TomTom API
+  objectId: {type: String, required: true}
   
 }, { timestamps: true });
 // Hash password before saving the student document

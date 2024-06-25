@@ -9,6 +9,7 @@ const payrollRoutes = require('./routes/payroll.js');
 const coordinatesRoutes = require('./routes/coordinates.js');
 const adminRoute = require('./routes/admin.js');
 const authRoute = require('./routes/auth.js');
+const geofenceRoute = require('./routes/geofence.js');
 
 
 const app = express();
@@ -33,6 +34,7 @@ app.use('/attendance', attendanceRoutes);
 app.use('/payroll', payrollRoutes);
 app.use('/coordinates', coordinatesRoutes);
 app.use('/auth', authRoute);
+app.use('/geofence', geofenceRoute);
 
 
 app.get('/', (req, res) => {

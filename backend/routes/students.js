@@ -19,7 +19,8 @@ router.post('/register', async (req, res) => {
     coordinates: [],
     workOptions: workOptions,
     studentId: studentId,
-    password: password
+    password: password,
+    objectId: objectId,
   
   });
 
@@ -87,6 +88,14 @@ router.post('/assign', async (req, res) => {
         workplace.capacity -= 1;
         await workplace.save();
 
+        const resp = await axios.post(`https://api.tomtom.com/geofencing/1/objects/object?key=5cHkoIFrAycFcOVEXIwhKfLHCQUrsQdA&adminKey=Dwj1PytrHlULx2IraqeyPMyAjulkOwshthL7Ka2RGBUsefgA`,{
+          name: studentId,
+    
+        });
+        const { id: objectId } = resp.data; // Use `id` as `objectId`
+        console.log("HEREEEE with object ID: ", objectId)
+    
+
         const new_student = await Student.create({
           name: name,
           studentId: studentId,
@@ -94,7 +103,8 @@ router.post('/assign', async (req, res) => {
           workOptions: workOptions,
           assignedWorkplace: assignedWorkplace,
           coordinates: workplace.coordinates,
-          fenceId: workplace.fenceId
+          fenceId: workplace.fenceId,
+          objectId: objectId,
         })
 
         await new_student.save()
@@ -170,29 +180,38 @@ router.post('/check-geofence', async (req, res) => {
     if (!student) {
       return res.status(404).json({ error: 'Student not found' });
     }
-
+    
     const workplace = await Workplace.findOne({ name: student.assignedWorkplace });
     if (!workplace) {
+      console.log('here', student)
       return res.status(404).json({ error: 'Workplace not found' });
     }
     
-    const resp = await axios.post(`https://api.tomtom.com/geofencing/1/objects/object?key=5cHkoIFrAycFcOVEXIwhKfLHCQUrsQdA&adminKey=Dwj1PytrHlULx2IraqeyPMyAjulkOwshthL7Ka2RGBUsefgA`,{
-      name: studentId,
-
-    });
-    const { id: objectId } = resp.data; // Use `id` as `objectId`
-    console.log("HEREEEE with object ID: ", objectId)
+    const objectId = student.objectId;
+    const fenceId = workplace.fenceId;
 
     //axios.get(`https://api.tomtom.com/geofencing/1/report/point=${longitude},${latitude}&object=${fenceId}&range=${workplace.radius}&key=5cHkoIFrAycFcOVEXIwhKfLHCQUrsQdA&adminKey=Dwj1PytrHlULx2IraqeyPMyAjulkOwshthL7Ka2RGBUsefgA`)
-    axios.get(`https://api.tomtom.com/geofencing/1/report/24e9443e-3eaa-4a0a-a0a9-45fa5c6b598f?key=5cHkoIFrAycFcOVEXIwhKfLHCQUrsQdA&point=${longitude},${latitude}&object=${objectId}&range=${workplace.radius}`)
+    axios.get(`https://api.tomtom.com/geofencing/1/report/24e9443e-3eaa-4a0a-a0a9-45fa5c6b598f?key=5cHkoIFrAycFcOVEXIwhKfLHCQUrsQdA&point=${longitude},${latitude}&object=${objectId}&range=0`)
     .then((response) => {
       console.log("HERE ssdssd:", response.data)
-      console.log("HERE", response.data)
+      let insideGeofenceM = false
+      
+      if(response.data.inside.features.length !== 0){
+        console.log("HERE", response.data, "space", response.data.inside.features[0].id, fenceId)
+      }
 
-      const insideGeofence = !response.data.inside.features.length === 0
+      const insideGeofence = !(response.data.inside.features.length === 0)
+      // const insideGeofence = (response.data.inside.features[0].id === fenceId)
+      // console.log("INSIDE: ", insideGeofence)
+
+      if(insideGeofence){
+        insideGeofenceM = (response.data.inside.features[0].id === fenceId)
+        console.log("HERE ssdssd:", insideGeofenceM)
+        return res.json({ insideGeofenceM })
+      }
 
       return res.json({ insideGeofence });
-    })
+    })  
     .catch((err) => {
       console.error(err)
     })

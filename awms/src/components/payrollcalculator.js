@@ -4,7 +4,7 @@ import axios from 'axios';
 import './styles.css';
 
 const PayrollCalculator = () => {
-  const [studentId, setStudentId] = useState('');
+  const [studentId, setStudentId] = useState(sessionStorage.getItem('studentid'));
   const [report, setReport] = useState(null);
 
   const handleSubmit = async (e) => {
@@ -31,6 +31,7 @@ const PayrollCalculator = () => {
             type="text"
             placeholder="Student ID"
             value={studentId}
+            readOnly
             onChange={(e) => setStudentId(e.target.value)}
             required
             className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-500"
