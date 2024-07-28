@@ -1,3 +1,4 @@
+// /frontend/src/components/LandingPage.js
 import React from "react";
 import { Link } from "react-router-dom";
 import './styles.css';
@@ -17,6 +18,11 @@ const LandingPage = () => {
         <Link to="/login">
           <button className="bg-white text-blue-600 border-2 border-blue-600 text-2xl font-semibold py-3 px-8 rounded-lg hover:bg-blue-600 hover:text-white transition duration-300">
             Login
+          </button>
+        </Link>
+        <Link to="/supervisor/login">
+          <button className="bg-gray-300 text-blue-600 border-2 border-gray-300 text-2xl font-semibold py-3 px-8 rounded-lg hover:bg-gray-400 transition duration-300">
+            I am a Supervisor
           </button>
         </Link>
       </div>

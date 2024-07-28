@@ -8,6 +8,10 @@ import AttendanceLogger from './components/AttendanceLogger';
 import PayrollCalculator from './components/PayrollCalculator';
 import Adminreg from './components/adminreg';
 import GeofenceDeleter from './components/GeofenceDeleter';
+import AttendanceSummary from "./components/AttendanceSummary";
+import SupervisorLogin from './components/SupervisorLogin';
+import SupervisorHome from './components/SupervisorHome';
+import SupervisorRegistration from './components/SupervisorRegistration';
 // import AttendanceSummary from './components/AttendanceSummary';
 
 
@@ -25,6 +29,10 @@ const App = () => {
           <Route path="/payroll-report" element={<PayrollCalculator/>} />
           <Route path="/admin" element={<Adminreg/>} />
           <Route path="/delete-geofence" element ={<GeofenceDeleter/>}/>
+          <Route path="/attendance-summary" element={<AttendanceSummary/>} />
+          <Route path="/supervisor/login" element={<SupervisorLogin/>} />
+          <Route path="/supervisor/home" element={<SupervisorHome/>} />
+          <Route path="/supervisor/register" element={<SupervisorRegistration/>} />
           {/* <Route path="/attendance-summary" element = {<AttendanceSummary/>}/> */}
           
         </Routes>

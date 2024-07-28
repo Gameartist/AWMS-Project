@@ -126,5 +126,37 @@ router.post('/update-attendance', async (req, res) => {
 });
 
 
+// Route to get attendance summary for a student
+router.post('/summary', async (req, res) => {
+  const { studentId } = req.body;
+
+  try {
+    // Find student
+    const student = await Student.findOne({ studentId });
+    if (!student) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    // Get attendance records
+    const attendanceRecords = await Attendance.find({ studentId });
+
+    if (!attendanceRecords || attendanceRecords.length === 0) {
+      return res.status(404).json({ error: 'No attendance records found' });
+    }
+
+    // Process records to create summary
+    const summary = attendanceRecords.map(record => ({
+      date: record.lastLoggedDate,
+      totalAttendanceTime: record.totalAttendanceTime
+    }));
+
+    res.json({ studentName: student.name, summary });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+
 
 module.exports = router;

@@ -3,8 +3,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const Home = () => {
-  const studentName = "Student Name"; // Replace with actual student name from context or state
-  const assignedWorkplace = "Assigned Workplace"; // Replace with actual assigned workplace
+ 
+  const studentId = sessionStorage.getItem('studentId');
+
 
   return (
   
@@ -19,7 +20,7 @@ const Home = () => {
             Track Attendance
           </button>
         </Link>
-        <Link to="/register-attendance" className="w-full md:w-1/3">
+        <Link to="/attendance-summary" className="w-full md:w-1/3">
           <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-full w-full text-lg">
             View Attendance Summary
           </button>

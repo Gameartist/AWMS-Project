@@ -10,6 +10,7 @@ const coordinatesRoutes = require('./routes/coordinates.js');
 const adminRoute = require('./routes/admin.js');
 const authRoute = require('./routes/auth.js');
 const geofenceRoute = require('./routes/geofence.js');
+const supervisorsRoute = require('./routes/supervisors.js');
 
 
 const app = express();
@@ -35,7 +36,7 @@ app.use('/payroll', payrollRoutes);
 app.use('/coordinates', coordinatesRoutes);
 app.use('/auth', authRoute);
 app.use('/geofence', geofenceRoute);
-
+app.use('/supervisors', supervisorsRoute);
 
 app.get('/', (req, res) => {
     res.send('Hello from the backend!');
